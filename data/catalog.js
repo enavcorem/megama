@@ -268,7 +268,14 @@ window.CATALOG = {
        "size": 83641
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה (8 שקפים, גם להשלמה)",
+       "url": "https://claude.ai/artifact/2UYaxigxWVAs3MJEmp5Uaq",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-l7",
@@ -293,7 +300,14 @@ window.CATALOG = {
      "traps": [],
      "status": "נוסה בכיתה",
      "files": [],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה (8 שקפים)",
+       "url": "https://claude.ai/artifact/3ctQGxvouGGsjU6LPXFLdV",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-tour",
@@ -376,7 +390,14 @@ window.CATALOG = {
        "size": 13098
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה",
+       "url": "https://claude.ai/artifact/1PMVMe4gz3ANGkMjBitk6X",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-m8",
@@ -410,7 +431,14 @@ window.CATALOG = {
        "size": 4131414
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "שקפי הבוקר",
+       "url": "https://claude.ai/artifact/PZ2zXmQK8crWzxjJiUAkdo",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-l9",
@@ -488,7 +516,14 @@ window.CATALOG = {
        "size": 40511
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "שקפים",
+       "url": "https://claude.ai/artifact/75z4GAipC7JdxxXHKkuJcf",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-l10",
@@ -530,7 +565,14 @@ window.CATALOG = {
        "size": 13015
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה",
+       "url": "https://claude.ai/artifact/L4kA695r7NXnbNHbtnpQ6P",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-survey",
@@ -581,7 +623,14 @@ window.CATALOG = {
      "traps": [],
      "status": "נבנה, עוד לא נוסה",
      "files": [],
-     "links": []
+     "links": [
+      {
+       "label": "שקפי הבוקר",
+       "url": "https://claude.ai/artifact/A8rtok8MKrZTtph6tp9s16",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-l11",
@@ -621,7 +670,14 @@ window.CATALOG = {
        "size": 13691
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה",
+       "url": "https://claude.ai/artifact/XqGgm9qjHrkAmKp3dJacvP",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-l12",
@@ -663,7 +719,14 @@ window.CATALOG = {
        "size": 13215
       }
      ],
-     "links": []
+     "links": [
+      {
+       "label": "מצגת פתיחה",
+       "url": "https://claude.ai/artifact/5dLWMkNRmExLyr3LfKaiB4",
+       "kind": "slides",
+       "shared": true
+      }
+     ]
     },
     {
      "id": "g10-quiz12",

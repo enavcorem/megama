@@ -140,7 +140,7 @@
         { "label": "חוברת טיפים: ארגז הכלים הסודי 5", "src": "מידע ונתונים י' - תשפז/ארגז הכלים הסודי 5 של מפצחי הקודים 🤓.pdf" }
       ],
       "links": [
-        { "label": "מצגת פתיחה (8 שקפים, גם להשלמה)", "url": "https://claude.ai/artifact/2UYaxigxWVAs3MJEmp5Uaq", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה (8 שקפים, גם להשלמה)", "url": "https://claude.ai/artifact/2UYaxigxWVAs3MJEmp5Uaq", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -160,7 +160,7 @@
       "status": "נוסה בכיתה",
       "files": [],
       "links": [
-        { "label": "מצגת פתיחה (8 שקפים)", "url": "https://claude.ai/artifact/3ctQGxvouGGsjU6LPXFLdV", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה (8 שקפים)", "url": "https://claude.ai/artifact/3ctQGxvouGGsjU6LPXFLdV", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -227,7 +227,7 @@
         { "label": "הדגמה למורה: וגם או", "src": "מידע ונתונים י' - תשפז/הדגמה למורה - וגם או.xlsx" }
       ],
       "links": [
-        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/1PMVMe4gz3ANGkMjBitk6X", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/1PMVMe4gz3ANGkMjBitk6X", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -250,7 +250,7 @@
         { "label": "דף מלווה (PDF)", "src": "מידע ונתונים י' - תשפז/אמת או שקר - שיעור 8 - דף מלווה.pdf" }
       ],
       "links": [
-        { "label": "שקפי הבוקר", "url": "https://claude.ai/artifact/PZ2zXmQK8crWzxjJiUAkdo", "kind": "slides", "shared": false }
+        { "label": "שקפי הבוקר", "url": "https://claude.ai/artifact/PZ2zXmQK8crWzxjJiUAkdo", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -304,7 +304,7 @@
         { "label": "ערכה למורה: תסריט, שלטים וכרטיסי דמויות", "src": "מידע ונתונים י' - תשפז/שומר הסף - ערכה למורה.docx" }
       ],
       "links": [
-        { "label": "שקפים", "url": "https://claude.ai/artifact/75z4GAipC7JdxxXHKkuJcf", "kind": "slides", "shared": false }
+        { "label": "שקפים", "url": "https://claude.ai/artifact/75z4GAipC7JdxxXHKkuJcf", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -335,7 +335,7 @@
         { "label": "הדגמה למורה: אוטובוס, הליכה של 10 דקות והגבול", "src": "מידע ונתונים י' - תשפז/הדגמה למורה - IF.xlsx" }
       ],
       "links": [
-        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/L4kA695r7NXnbNHbtnpQ6P", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/L4kA695r7NXnbNHbtnpQ6P", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -375,7 +375,7 @@
       "status": "נבנה, עוד לא נוסה",
       "files": [],
       "links": [
-        { "label": "שקפי הבוקר", "url": "https://claude.ai/artifact/A8rtok8MKrZTtph6tp9s16", "kind": "slides", "shared": false }
+        { "label": "שקפי הבוקר", "url": "https://claude.ai/artifact/A8rtok8MKrZTtph6tp9s16", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -403,7 +403,7 @@
         { "label": "הדגמה למורה: סקר בחדר המורים", "src": "מידע ונתונים י' - תשפז/הדגמה למורה - COUNTIF.xlsx" }
       ],
       "links": [
-        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/XqGgm9qjHrkAmKp3dJacvP", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/XqGgm9qjHrkAmKp3dJacvP", "kind": "slides", "shared": true }
       ]
     },
     {
@@ -432,7 +432,7 @@
         { "label": "הדגמה למורה: רובוטיקה, AND מול OR", "src": "מידע ונתונים י' - תשפז/הדגמה למורה - האספה.xlsx" }
       ],
       "links": [
-        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/5dLWMkNRmExLyr3LfKaiB4", "kind": "slides", "shared": false }
+        { "label": "מצגת פתיחה", "url": "https://claude.ai/artifact/5dLWMkNRmExLyr3LfKaiB4", "kind": "slides", "shared": true }
       ]
     },
     {
