@@ -48,11 +48,14 @@
       ${l.shared === false ? ' <span class="chip st-new">עוד לא משותפת</span>' : ''}</li>`).join('') + '</ul>';
   }
 
-  function itemHtml(it, open) {
+  // numbered: בכיתה שבה יש מסלול של שיעורים (י׳) מספר השיעור מופיע בעיגול. where: בחיפוש, איפה הפריט יושב
+  function itemHtml(it, open, numbered, where) {
     const chips = [
+      where ? `<span class="chip where">${esc(where)}</span>` : '',
       `<span class="chip kind">${esc(it.kind)}</span>`,
       it.status ? `<span class="chip ${STATUS_CLASS[it.status] || 'st-new'}">${esc(it.status)}</span>` : '',
-      ...(it.functions || []).map((f) => `<span class="chip fn">${esc(f)}</span>`),
+      // שם בעברית ("עיצוב מותנה") בגופן הרגיל ומימין לשמאל, שם של פונקציה בגופן של נוסחה
+      ...(it.functions || []).map((f) => `<span class="chip fn${/[א-ת]/.test(f) ? ' he' : ''}">${esc(f)}</span>`),
     ].join('');
     const sec = (h, inner) => (inner ? `<section><h3>${h}</h3>${inner}</section>` : '');
     const p = it.private;
@@ -63,8 +66,10 @@
         ${sec('איך בונים מחדש', p.build ? `<p>${rich(p.build)}</p>` : '')}
         ${sec('קבצים פרטיים (בדרייב)', fileList(p.files))}
       </div>` : '';
-    return `<details class="item" id="${esc(it.id)}"${open ? ' open' : ''}>
-      <summary><span class="num">${Number.isInteger(it.order) && it.kind === 'שיעור' ? it.order : '·'}</span>
+    const isLesson = Number.isInteger(it.order) && it.kind === 'שיעור';
+    const num = numbered ? `<span class="num${isLesson ? '' : ' dot'}">${isLesson ? it.order : ''}</span>` : '';
+    return `<details class="item${numbered ? '' : ' nonum'}" id="${esc(it.id)}"${open ? ' open' : ''}>
+      <summary>${num}
         <span class="head"><span class="title-row"><span class="title">${esc(it.title)}</span></span>
         <p class="summary">${rich(it.summary)}</p><span class="chips">${chips}</span></span></summary>
       <div class="body">
@@ -79,18 +84,56 @@
   }
 
   const sortItems = (a, b) => (a.order ?? 999) - (b.order ?? 999);
+  const countLabel = (n) => (n === 1 ? 'פריט אחד' : `${n} פריטים`);
 
-  function gradeHtml(g, openId) {
-    const units = g.units.map((u) => {
-      const items = g.items.filter((it) => it.unit === u.id).sort(sortItems);
-      if (!items.length) return '';
-      return `<section class="unit" id="u-${esc(g.key)}-${esc(u.id)}"><h2>${esc(u.title)}</h2>
-        ${u.intro ? `<p>${rich(u.intro)}</p>` : ''}
-        <div class="items">${items.map((it) => itemHtml(it, it.id === openId)).join('')}</div></section>`;
+  // חלקים בתוך כיתה (יא: חלק א׳, חלק ב׳, מבחנים ותוכנית). הכתובת: #g11-a
+  const secOf = (g, unitId) => (g.sections || []).find((s) => s.units.includes(unitId));
+  const secHash = (g, s) => g.key + '-' + s.id;
+  const byHash = {};
+  C.grades.forEach((g) => (g.sections || []).forEach((s) => { byHash[secHash(g, s)] = { g, s }; }));
+
+  // סרגל פנימי. בכיתה בלי חלקים (י׳) הוא מסלול, וליד כל יחידה טווח השיעורים שלה
+  function sideHtml(g, units, here) {
+    const path = !g.sections;
+    const rows = units.map((u) => {
+      const items = g.items.filter((it) => it.unit === u.id);
+      let meta = countLabel(items.length);
+      if (path) {
+        const ls = items.filter((it) => it.kind === 'שיעור' && Number.isInteger(it.order)).map((it) => it.order);
+        if (ls.length === 1) meta = 'שיעור ' + ls[0];
+        else if (ls.length) meta = 'שיעורים ' + Math.min(...ls) + '–' + Math.max(...ls);
+      }
+      return '<li><a href="#' + esc(here) + '" data-unit="u-' + esc(g.key) + '-' + esc(u.id) + '">'
+        + '<span class="s-title">' + esc(u.title) + '</span><span class="s-meta">' + meta + '</span></a></li>';
     }).join('');
-    const nav = g.units.filter((u) => g.items.some((it) => it.unit === u.id))
-      .map((u) => `<a href="#${esc(g.key)}" data-unit="u-${esc(g.key)}-${esc(u.id)}">${esc(u.title)}</a>`).join('');
-    return `<p class="intro">${rich(g.intro)}</p><nav class="unit-nav" aria-label="יחידות">${nav}</nav>${units}`;
+    return '<aside class="side' + (path ? ' path' : '') + '" aria-label="נושאים">'
+      + '<p class="side-h">' + (path ? 'המסלול של השנה' : 'הנושאים בחלק הזה') + '</p><ol>' + rows + '</ol></aside>';
+  }
+
+  function partsHtml(g, cur) {
+    return '<nav class="parts" aria-label="חלקים">' + g.sections.map((s) => {
+      const n = g.items.filter((it) => s.units.includes(it.unit)).length;
+      return '<a href="#' + esc(secHash(g, s)) + '" data-tone="' + esc(s.tone || 'blue') + '"'
+        + (s === cur ? ' aria-current="page"' : '') + '>'
+        + '<span class="p-title">' + esc(s.title) + '</span>'
+        + '<span class="p-sub">' + esc(s.sub || '') + ' · ' + countLabel(n) + '</span></a>';
+    }).join('') + '</nav>';
+  }
+
+  function gradeHtml(g, sec, openId) {
+    const numbered = !g.sections;
+    const units = (sec ? sec.units.map((id) => g.units.find((u) => u.id === id)) : g.units)
+      .filter((u) => u && g.items.some((it) => it.unit === u.id));
+    const body = units.map((u) => {
+      const items = g.items.filter((it) => it.unit === u.id).sort(sortItems);
+      return '<section class="unit" id="u-' + esc(g.key) + '-' + esc(u.id) + '">'
+        + '<div class="unit-h"><h2>' + esc(u.title) + '</h2><span class="u-count">' + countLabel(items.length) + '</span></div>'
+        + (u.intro ? '<p class="unit-intro">' + rich(u.intro) + '</p>' : '')
+        + '<div class="items">' + items.map((it) => itemHtml(it, it.id === openId, numbered)).join('') + '</div></section>';
+    }).join('');
+    const here = sec ? secHash(g, sec) : g.key;
+    return '<p class="intro">' + rich(g.intro) + '</p>' + (sec ? partsHtml(g, sec) : '')
+      + '<div class="layout">' + sideHtml(g, units, here) + '<div class="content">' + body + '</div></div>';
   }
 
   function searchHtml(q) {
@@ -100,10 +143,13 @@
       const hits = g.items.filter((it) => nq.every((w) => haystack(it, g).includes(w))).sort(sortItems);
       total += hits.length;
       if (!hits.length) return '';
-      return `<h2 class="grade-h">${esc(g.gradeLabel)} · ${hits.length}</h2>
-        <div class="items">${hits.map((it) => itemHtml(it, false)).join('')}</div>`;
+      return '<h2 class="grade-h">' + esc(g.gradeLabel) + ' · ' + countLabel(hits.length) + '</h2>'
+        + '<div class="items">' + hits.map((it) => {
+          const s = secOf(g, it.unit);
+          return itemHtml(it, false, !g.sections, s ? s.title : '');
+        }).join('') + '</div>';
     }).join('');
-    return total ? out : `<p class="empty">לא נמצא פריט עם "${esc(q)}". אפשר לנסות שם של פונקציה, נושא או מילה מהסיפור.</p>`;
+    return total ? out : '<p class="empty">לא נמצא פריט עם "' + esc(q) + '". אפשר לנסות שם של פונקציה, נושא או מילה מהסיפור.</p>';
   }
 
   function aboutHtml() {
@@ -128,28 +174,69 @@
     </div>`;
   }
 
+  // הדגשה בסרגל של היחידה שגוללים בה
+  let spy = null;
+  function setupSpy() {
+    if (spy) { spy.disconnect(); spy = null; }
+    const links = [...app.querySelectorAll('.side a[data-unit]')];
+    if (!links.length) return;
+    const bar = app.querySelector('.side ol');
+    const set = (id) => links.forEach((a) => {
+      const on = a.dataset.unit === id;
+      a.classList.toggle('on', on);
+      // בטלפון הסרגל הוא פס אופקי: מזיזים אותו כך שהיחידה הפעילה תיראה
+      if (on && bar.scrollWidth > bar.clientWidth + 2) {
+        const ar = a.getBoundingClientRect(), br = bar.getBoundingClientRect();
+        bar.scrollBy({ left: ar.left + ar.width / 2 - (br.left + br.width / 2), behavior: 'smooth' });
+      }
+    });
+    set(links[0].dataset.unit);
+    if (!('IntersectionObserver' in window)) return;
+    spy = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) set(e.target.id); });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    app.querySelectorAll('.unit').forEach((u) => spy.observe(u));
+  }
+
+  let lastView = '';
   function route() {
     const q = document.getElementById('q').value.trim();
     const hash = decodeURIComponent(location.hash.slice(1));
-    let gradeKey = C.grades[0].key, openId = null, view = 'grade';
+    let gradeKey = C.grades[0].key, secId = null, openId = null, view = 'grade';
     if (hash === 'about') view = 'about';
-    else if (byId[hash]) { gradeKey = byId[hash].g.key; openId = hash; }
+    else if (byId[hash]) {
+      gradeKey = byId[hash].g.key; openId = hash;
+      const s = secOf(byId[hash].g, byId[hash].it.unit);
+      if (s) secId = s.id;
+    } else if (byHash[hash]) { gradeKey = byHash[hash].g.key; secId = byHash[hash].s.id; }
     else if (C.grades.some((g) => g.key === hash)) gradeKey = hash;
     if (q) view = 'search';
+
+    const g = C.grades.find((x) => x.key === gradeKey);
+    const sec = g.sections ? (g.sections.find((s) => s.id === secId) || g.sections[0]) : null;
+    document.body.dataset.tone = view === 'grade' ? ((sec && sec.tone) || g.tone || 'blue') : 'blue';
 
     document.querySelectorAll('.tabs a').forEach((a) => {
       const cur = (view === 'about' && a.dataset.key === 'about') || (view === 'grade' && a.dataset.key === gradeKey);
       if (cur) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    const g = C.grades.find((x) => x.key === gradeKey);
-    app.innerHTML = view === 'about' ? aboutHtml() : view === 'search' ? searchHtml(q) : gradeHtml(g, openId);
+    app.innerHTML = view === 'about' ? aboutHtml() : view === 'search' ? searchHtml(q) : gradeHtml(g, sec, openId);
+    setupSpy();
+    const viewKey = view + gradeKey + (sec ? sec.id : '');
     if (openId) {
       const el = document.getElementById(openId);
       if (el) el.scrollIntoView({ block: 'start' });
+    } else if (view === 'grade' && lastView && viewKey !== lastView) {
+      // מעבר בין חלקים או כיתות: חוזרים לראש הרשימה אם גללנו מתחת לה
+      const top = app.querySelector('.parts') || app;
+      if (top.getBoundingClientRect().top < 0) top.scrollIntoView({ block: 'start' });
     }
+    lastView = viewKey;
   }
 
   // שלד הדף
+  const hero = document.getElementById('hero');
+  if (hero && window.HERO_SVG) hero.innerHTML = window.HERO_SVG;
   document.getElementById('tabs').innerHTML =
     C.grades.map((g) => `<a href="#${esc(g.key)}" data-key="${esc(g.key)}">${esc(g.gradeLabel)}</a>`).join('') +
     '<a href="#about" data-key="about">איך זה עובד</a>';

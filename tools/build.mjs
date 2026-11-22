@@ -95,7 +95,24 @@ for (const gf of gradeFiles) {
   Object.keys(priv).filter((id) => !(g.items || []).some((it) => it.id === id))
     .forEach((id) => warnings.push(`${key}: בפרטי יש פריט שלא קיים בציבורי: ${id}`));
 
-  const base = { key, grade: g.grade, gradeLabel: g.gradeLabel, intro: g.intro, units: g.units };
+  // חלקים בתוך כיתה (יא: חלק א׳, חלק ב׳, מבחנים). כל יחידה עם פריטים חייבת להיות בחלק אחד בדיוק
+  if (g.sections) {
+    const seen = new Map();
+    for (const sec of g.sections) {
+      // הכתובת של חלק היא #g11-a, ולכן אסור שיהיה פריט עם אותו id
+      if (ids.has(`${key}-${sec.id}`)) errors.push(`${key}: לחלק "${sec.id}" ולפריט ${key}-${sec.id} יש אותה כתובת`);
+      for (const u of sec.units || []) {
+        if (!unitIds.has(u)) errors.push(`${key} / חלק ${sec.id}: יחידה לא מוכרת "${u}"`);
+        if (seen.has(u)) errors.push(`${key}: היחידה "${u}" גם בחלק ${seen.get(u)} וגם בחלק ${sec.id}`);
+        seen.set(u, sec.id);
+      }
+    }
+    for (const u of unitIds) {
+      if (!seen.has(u) && (g.items || []).some((it) => it.unit === u)) errors.push(`${key}: היחידה "${u}" לא שייכת לאף חלק`);
+    }
+  }
+
+  const base = { key, grade: g.grade, gradeLabel: g.gradeLabel, intro: g.intro, tone: g.tone, units: g.units, sections: g.sections };
   publicGrades.push({ ...base, items: pubItems });
   privateGrades.push({ ...base, items: privItems });
 }
@@ -139,9 +156,13 @@ if (!CHECK && !errors.length) {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&family=Secular+One&display=swap">
 <style>${fs.readFileSync(path.join(SITE, 'style.css'), 'utf8')}</style>
 <div dir="rtl" lang="he">
-<header class="masthead"><div class="wrap">
-  <h1>מידע ונתונים <span class="private-flag">דף פרטי</span></h1><br>
-  <p class="sub">כל מה שבאתר, ועוד ההערות שלי, הפתרונות והמבחנים</p>
+<header class="masthead"><div class="wrap hero-wrap">
+  <div class="hero-text">
+    <p class="eyebrow">מגמת מידע ונתונים · תשפ״ז</p>
+    <h1>מידע ונתונים <span class="private-flag">דף פרטי</span></h1>
+    <p class="sub">כל מה שבאתר, ועוד ההערות שלי, הפתרונות והמבחנים</p>
+  </div>
+  <div class="hero-art" id="hero" aria-hidden="true"></div>
   <nav class="tabs" id="tabs" aria-label="שכבות"></nav>
 </div></header>
 <main class="wrap">
@@ -151,6 +172,7 @@ if (!CHECK && !errors.length) {
 </main>
 </div>
 <script>window.CATALOG = ${safe(JSON.stringify(privCatalog))};</script>
+<script>${safe(fs.readFileSync(path.join(SITE, 'hero.svg.js'), 'utf8'))}</script>
 <script>${safe(fs.readFileSync(path.join(SITE, 'app.js'), 'utf8'))}</script>
 `;
   fs.writeFileSync(path.join(PRIV, 'דף פרטי.html'), html);
